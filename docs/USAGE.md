@@ -133,6 +133,6 @@ A: Pattern-based detection is very accurate for common issues. However, it may m
 
 ## Need Help?
 
-- 📧 Email: your.email@example.com
+- 📧 Email: pathaksoumya2005@gmail.com
 - 🐛 Report bugs: [GitHub Issues](https://github.com/SawwmyaP/code-review-system/issues)
 - 💬 Discussions: [GitHub Discussions](https://github.com/SawwmyaP/code-review-system/discussions)
