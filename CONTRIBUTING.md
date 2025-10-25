@@ -71,7 +71,7 @@ newlanguage: [
 ## Development Setup
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/code-review-system.git
+git clone https://github.com/your-username/code-review-system.git
 
 # Create a branch
 git checkout -b feature/your-feature-name

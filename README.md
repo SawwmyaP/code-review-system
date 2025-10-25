@@ -306,6 +306,9 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 Project Link: [https://github.com/SawwmyaP/code-review-system](https://github.com/SawwmyaP/code-review-system)
 
+
+email: [pathaksoumya2005@gmail.com]
+
 ---
 
 ## 🙏 Acknowledgments
