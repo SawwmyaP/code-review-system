@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeGuard - Intelligent Code Review System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .input-section {
+            grid-column: 1 / -1;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        select, button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select {
+            background: #f5f5f5;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-grid {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .issue-list {
+            grid-column: 1 / -1;
+        }
+
+        .issue-item {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .issue-item.critical {
+            border-left-color: #e74c3c;
+            background: #ffebee;
+        }
+
+        .issue-item.warning {
+            border-left-color: #f39c12;
+            background: #fff3e0;
+        }
+
+        .issue-item.info {
+            border-left-color: #3498db;
+            background: #e3f2fd;
+        }
+
+        .issue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .issue-title {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .issue-severity {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .severity-critical { background: #e74c3c; }
+        .severity-warning { background: #f39c12; }
+        .severity-info { background: #3498db; }
+
+        .issue-description {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .issue-line {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-size: 0.9em;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ CodeGuard</h1>
+            <p>Intelligent Autonomous Code Review & Bug Detection System</p>
+        </header>
+
+        <div class="main-content">
+            <div class="card input-section">
+                <h2>📝 Code Input</h2>
+                <textarea id="codeInput" placeholder="Paste your code here for analysis...
+
+Example (JavaScript):
+function calculateTotal(items) {
+    var total = 0;
+    for(var i = 0; i <= items.length; i++) {
+        total += items[i].price;
+    }
+    return total;
+}"></textarea>
+                <div class="controls">
+                    <select id="languageSelect">
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="css">CSS</option>
+                        <option value="html">HTML</option>
+                        <option value="cpp">C++</option>
+                        <option value="csharp">C#</option>
+                    </select>
+                    <button id="analyzeBtn">🔍 Analyze Code</button>
+                    <button id="clearBtn" style="background: #95a5a6;">Clear</button>
+                </div>
+            </div>
+
+            <div id="resultsSection" style="display: none; grid-column: 1 / -1;">
+                <div class="results-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Code Quality</div>
+                        <div class="metric-value" id="qualityScore">-</div>
+                        <div class="metric-label">out of 100</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Issues Found</div>
+                        <div class="metric-value" id="issuesCount">-</div>
+                        <div class="metric-label">total problems</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Lines of Code</div>
+                        <div class="metric-value" id="linesCount">-</div>
+                        <div class="metric-label">analyzed</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Complexity</div>
+                        <div class="metric-value" id="complexityScore">-</div>
+                        <div class="metric-label">cyclomatic</div>
+                    </div>
+                </div>
+
+                <div class="card issue-list">
+                    <h2>🐛 Detected Issues</h2>
+                    <div id="issuesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const codeInput = document.getElementById('codeInput');
+        const languageSelect = document.getElementById('languageSelect');
+        const resultsSection = document.getElementById('resultsSection');
+
+        // Code analysis rules for different languages
+        const analysisRules = {
+            javascript: [
+                {
+                    pattern: /var\s+\w+/g,
+                    severity: 'warning',
+                    title: 'Use of var keyword',
+                    description: 'Consider using let or const instead of var for better scoping',
+                    category: 'Best Practice'
+                },
+                {
+                    pattern: /==(?!=)/g,
+                    severity: 'warning',
+                    title: 'Loose equality operator',
+                    description: 'Use === instead of == for strict equality comparison',
+                    category: 'Best Practice'
+                },
+                {
+                    pattern: /console\.log/g,
+                    severity: 'info',
+                    title: 'Console statement detected',
+                    description: 'Remove console.log statements before production',
+                    category: 'Code Quality'
+                },
+                {
+                    pattern: /eval\(/g,
+                    severity: 'critical',
+                    title: 'Use of eval()',
+                    description: 'eval() is dangerous and should be avoided - security risk',
+                    category: 'Security'
+                },
+                {
+                    pattern: /for\s*\([^)]*i\s*<=\s*\w+\.length/g,
+                    severity: 'critical',
+                    title: 'Array index out of bounds',
+                    description: 'Loop condition uses <= with array.length, causing index out of bounds',
+                    category: 'Bug'
+                },
+                {
+                    pattern: /function\s+\w+\s*\([^)]*\)\s*{[^}]{200,}}/g,
+                    severity: 'warning',
+                    title: 'Function too long',
+                    description: 'Consider breaking down large functions into smaller, reusable pieces',
+                    category: 'Maintainability'
+                }
+            ],
+            python: [
+                {
+                    pattern: /except\s*:/g,
+                    severity: 'warning',
+                    title: 'Bare except clause',
+                    description: 'Specify exception types instead of using bare except',
+                    category: 'Best Practice'
+                },
+                {
+                    pattern: /import\s+\*/g,
+                    severity: 'warning',
+                    title: 'Wildcard import',
+                    description: 'Avoid wildcard imports (import *), specify what you need',
+                    category: 'Best Practice'
+                },
+                {
+                    pattern: /==\s*None|None\s*==/g,
+                    severity: 'warning',
+                    title: 'Incorrect None comparison',
+                    description: 'Use "is None" instead of "== None"',
+                    category: 'Best Practice'
+                },
+                {
+                    pattern: /exec\(/g,
+                    severity: 'critical',
+                    title: 'Use of exec()',
+                    description: 'exec() is dangerous and should be avoided - security risk',
+                    category: 'Security'
+                },
+                {
+                    pattern: /def\s+\w+\s*\([^)]*\):[^:]{300,}/g,
+                    severity: 'warning',
+                    title: 'Function too long',
+                    description: 'Consider breaking down large functions for better maintainability',
+                    category: 'Maintainability'
+                }
+            ],
+            java: [
+                {
+                    pattern: /System\.out\.print/g,
+                    severity: 'info',
+                    title: 'System.out usage',
+                    description: 'Consider using a logging framework instead of System.out',
+                    category: 'Best Practice'
+                },
+                {
+                    pattern: /catch\s*\(\s*Exception\s+\w+\s*\)\s*{\s*}/g,
+                    severity: 'warning',
+                    title: 'Empty catch block',
+                    description: 'Empty catch blocks hide errors - handle or log exceptions',
+                    category: 'Error Handling'
+                },
+                {
+                    pattern: /public\s+class\s+\w+\s*{[^}]{500,}}/g,
+                    severity: 'warning',
+                    title: 'Class too large',
+                    description: 'Consider breaking down large classes following Single Responsibility Principle',
+                    category: 'Design'
+                },
+                {
+                    pattern: /==\s*null|null\s*==/g,
+                    severity: 'info',
+                    title: 'Null comparison',
+                    description: 'Consider using Objects.isNull() or Optional for null handling',
+                    category: 'Best Practice'
+                }
+            ],
+            css: [
+                {
+                    pattern: /!important/g,
+                    severity: 'warning',
+                    title: 'Use of !important',
+                    description: '!important should be used sparingly - indicates specificity issues',
+                    category: 'Best Practice'
+                },
+                {
+                    pattern: /#[0-9a-fA-F]{3,6}(?!\s)/g,
+                    severity: 'info',
+                    title: 'Color value without fallback',
+                    description: 'Consider providing fallback colors for better compatibility',
+                    category: 'Compatibility'
+                },
+                {
+                    pattern: /width:\s*\d+px/g,
+                    severity: 'info',
+                    title: 'Fixed width in pixels',
+                    description: 'Consider using responsive units like %, em, or rem',
+                    category: 'Responsive Design'
+                }
+            ],
+            html: [
+                {
+                    pattern: /<img(?![^>]*alt=)/g,
+                    severity: 'warning',
+                    title: 'Image without alt attribute',
+                    description: 'Add alt attribute to images for accessibility',
+                    category: 'Accessibility'
+                },
+                {
+                    pattern: /<div\s+onclick=/g,
+                    severity: 'warning',
+                    title: 'Inline event handler',
+                    description: 'Use addEventListener instead of inline event handlers',
+                    category: 'Best Practice'
+                },
+                {
+                    pattern: /style\s*=/g,
+                    severity: 'info',
+                    title: 'Inline styles',
+                    description: 'Consider moving styles to CSS files for better maintainability',
+                    category: 'Maintainability'
+                }
+            ]
+        };
+
+        function analyzeCode() {
+            const code = codeInput.value.trim();
+            const language = languageSelect.value;
+
+            if (!code) {
+                alert('Please enter some code to analyze');
+                return;
+            }
+
+            // Show loading
+            resultsSection.style.display = 'block';
+            document.getElementById('issuesList').innerHTML = '<div class="loading"><div class="spinner"></div>Analyzing code...</div>';
+
+            // Simulate analysis delay for realism
+            setTimeout(() => {
+                const results = performAnalysis(code, language);
+                displayResults(results);
+            }, 800);
+        }
+
+        function performAnalysis(code, language) {
+            const lines = code.split('\n');
+            const rules = analysisRules[language] || analysisRules.javascript;
+            const issues = [];
+
+            // Analyze code against rules
+            rules.forEach(rule => {
+                const matches = code.match(rule.pattern);
+                if (matches) {
+                    matches.forEach(match => {
+                        const lineNumber = findLineNumber(code, match);
+                        issues.push({
+                            ...rule,
+                            line: lineNumber,
+                            code: lines[lineNumber - 1]?.trim() || match
+                        });
+                    });
+                }
+            });
+
+            // Calculate metrics
+            const linesOfCode = lines.filter(line => line.trim().length > 0).length;
+            const complexity = calculateComplexity(code);
+            const qualityScore = calculateQualityScore(issues.length, linesOfCode, complexity);
+
+            return {
+                issues,
+                metrics: {
+                    linesOfCode,
+                    complexity,
+                    qualityScore,
+                    issuesCount: issues.length
+                }
+            };
+        }
+
+        function findLineNumber(code, match) {
+            const beforeMatch = code.substring(0, code.indexOf(match));
+            return beforeMatch.split('\n').length;
+        }
+
+        function calculateComplexity(code) {
+            // Simple cyclomatic complexity estimation
+            const patterns = [/if\s*\(/, /else/, /for\s*\(/, /while\s*\(/, /case\s+/, /catch\s*\(/, /\&\&/, /\|\|/g];
+            let complexity = 1;
+            
+            patterns.forEach(pattern => {
+                const matches = code.match(pattern);
+                if (matches) complexity += matches.length;
+            });
+
+            return Math.min(complexity, 99);
+        }
+
+        function calculateQualityScore(issuesCount, linesOfCode, complexity) {
+            const issuesPenalty = issuesCount * 5;
+            const complexityPenalty = Math.max(0, (complexity - 10) * 2);
+            const score = Math.max(0, 100 - issuesPenalty - complexityPenalty);
+            return Math.round(score);
+        }
+
+        function displayResults(results) {
+            // Update metrics
+            document.getElementById('qualityScore').textContent = results.metrics.qualityScore;
+            document.getElementById('issuesCount').textContent = results.metrics.issuesCount;
+            document.getElementById('linesCount').textContent = results.metrics.linesOfCode;
+            document.getElementById('complexityScore').textContent = results.metrics.complexity;
+
+            // Display issues
+            const issuesList = document.getElementById('issuesList');
+            
+            if (results.issues.length === 0) {
+                issuesList.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <h3>No Issues Found!</h3>
+                        <p>Your code looks clean. Great job! 🎉</p>
+                    </div>
+                `;
+                return;
+            }
+
+            issuesList.innerHTML = results.issues
+                .sort((a, b) => {
+                    const severityOrder = { critical: 0, warning: 1, info: 2 };
+                    return severityOrder[a.severity] - severityOrder[b.severity];
+                })
+                .map(issue => `
+                    <div class="issue-item ${issue.severity}">
+                        <div class="issue-header">
+                            <span class="issue-title">${issue.title}</span>
+                            <span class="issue-severity severity-${issue.severity}">${issue.severity.toUpperCase()}</span>
+                        </div>
+                        <div class="issue-description">
+                            <strong>${issue.category}:</strong> ${issue.description}
+                        </div>
+                        <div class="issue-line">
+                            Line ${issue.line}: <code>${issue.code}</code>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        analyzeBtn.addEventListener('click', analyzeCode);
+        
+        clearBtn.addEventListener('click', () => {
+            codeInput.value = '';
+            resultsSection.style.display = 'none';
+        });
+
+        // Allow Ctrl+Enter to analyze
+        codeInput.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                analyzeCode();
+            }
+        });
+    </script>
+</body>
+</html>
