@@ -3,7 +3,7 @@
 ## Getting Started
 
 ### Step 1: Access the Tool
-Visit [https://yourusername.github.io/code-review-system/](https://yourusername.github.io/code-review-system/)
+Visit [https://SawwmyaP.github.io/code-review-system/](https://SawwmyaP.github.io/code-review-system/)
 
 ### Step 2: Prepare Your Code
 Copy the code you want to analyze to your clipboard.
@@ -134,5 +134,5 @@ A: Pattern-based detection is very accurate for common issues. However, it may m
 ## Need Help?
 
 - 📧 Email: your.email@example.com
-- 🐛 Report bugs: [GitHub Issues](https://github.com/yourusername/code-review-system/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/code-review-system/discussions)
+- 🐛 Report bugs: [GitHub Issues](https://github.com/SawwmyaP/code-review-system/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/SawwmyaP/code-review-system/discussions)

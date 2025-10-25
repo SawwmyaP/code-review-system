@@ -8,7 +8,7 @@
 
 **An autonomous code review and bug detection system that analyzes code across multiple programming languages in real-time.**
 
-[🚀 Live Demo](https://yourusername.github.io/code-review-system/) | [📖 Documentation](docs/USAGE.md) | [🐛 Report Bug](https://github.com/yourusername/code-review-system/issues)
+[🚀 Live Demo](https://SawwmyaP.github.io/code-review-system/) | [📖 Documentation](docs/USAGE.md) | [🐛 Report Bug](https://github.com/SawwmyaP/code-review-system/issues)
 
 </div>
 
@@ -66,7 +66,7 @@ CodeGuard is an intelligent, browser-based code analysis tool designed to help d
 
 ## 🌐 Live Demo
 
-**Try it now:** [https://yourusername.github.io/code-review-system/](https://yourusername.github.io/code-review-system/)
+**Try it now:** [https://SawwmyaP.github.io/code-review-system/](https://SawwmyaP.github.io/code-review-system/)
 
 No installation required - just open and start analyzing!
 
@@ -170,13 +170,13 @@ No installation required - just open and start analyzing!
 
 **Option 1: Use Online (Recommended)**
 ```
-Simply visit: https://yourusername.github.io/code-review-system/
+Simply visit: https://SawwmyaP.github.io/code-review-system/
 ```
 
 **Option 2: Run Locally**
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/code-review-system.git
+git clone https://github.com/SawwmyaP/code-review-system.git
 
 # Navigate to project directory
 cd code-review-system
@@ -303,9 +303,8 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## 👨‍💻 Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - your.email@example.com
 
-Project Link: [https://github.com/yourusername/code-review-system](https://github.com/yourusername/code-review-system)
+Project Link: [https://github.com/SawwmyaP/code-review-system](https://github.com/SawwmyaP/code-review-system)
 
 ---
 
@@ -322,33 +321,6 @@ Project Link: [https://github.com/yourusername/code-review-system](https://githu
 
 **⭐ Star this repository if you find it helpful!**
 
-Made with ❤️ by [Your Name](https://github.com/yourusername)
+Made with ❤️ by [Soumya Pathak](https://github.com/SawwmyaP)
 
 </div>
-```
-
----
-
-## **3. LICENSE**
-```
-MIT License
-
-Copyright (c) 2025 [Your Name]
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
